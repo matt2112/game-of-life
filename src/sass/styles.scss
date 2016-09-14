@@ -38,3 +38,22 @@ h1 {
 .footer a {
     color: #444;
 }
+
+table {
+    margin: 0 auto;
+    border-collapse: collapse;
+}
+
+td {
+    border: 2px solid $black;
+    height: 20px;
+    width: 20px;
+}
+
+.dead {
+    background-color: #fff;
+}
+
+.alive {
+    background-color: $black;
+}
