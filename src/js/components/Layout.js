@@ -9,8 +9,10 @@ class Layout extends Component {
 
         this.state = {
             rows: 20,
-            cols: 20,
-            board: []
+            cols: 50,
+            board: [],
+            timer: 0,
+            ms: 500
         };
 
     }
@@ -20,7 +22,7 @@ class Layout extends Component {
         for (var i = 0; i < this.state.rows; i++) {
             let row = [];
             for (var j = 0; j < this.state.cols; j++) {
-                let cell = Math.random() > 0.8 ? "alive" : "dead";
+                let cell = Math.random() > 0.99 ? "alive" : "dead";
                 row.push(cell);
             }
             board.push(row);
@@ -64,6 +66,16 @@ class Layout extends Component {
         this.setState({ board: newBoard});
     }
 
+    startTimer() {
+        clearInterval(this.state.timer);
+        let timer = setInterval(this.nextStep.bind(this), this.state.ms);
+        this.setState({ timer });
+    }
+
+    stopTimer() {
+        clearInterval(this.state.timer);
+    }
+
     componentWillMount() {
         this.generateRandomBoard();
     }
@@ -76,6 +88,13 @@ class Layout extends Component {
                     <Grid board={this.state.board} />
                     <button onClick={this.generateRandomBoard.bind(this)}>Generate new board</button>
                     <button onClick={this.nextStep.bind(this)}>Next step</button>
+                    <button onClick={this.startTimer.bind(this)}>Start</button>
+                    <button onClick={this.stopTimer.bind(this)}>Stop</button>
+                    <input onChange={event => {
+                            let ms = event.target.value;
+                            this.setState({ ms });
+                        }}
+                        value={this.state.ms}></input>
                 </div>
                 <footer className="footer">
                     Coded by <a href="https://github.com/matt2112" target="_blank">Matt Lewis</a>
