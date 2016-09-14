@@ -18,11 +18,12 @@ class Layout extends Component {
     }
 
     generateRandomBoard() {
+        clearInterval(this.state.timer);
         let board = [];
         for (var i = 0; i < this.state.rows; i++) {
             let row = [];
             for (var j = 0; j < this.state.cols; j++) {
-                let cell = Math.random() > 0.99 ? "alive" : "dead";
+                let cell = Math.random() > 0.98 ? "alive" : "dead";
                 row.push(cell);
             }
             board.push(row);
@@ -41,8 +42,8 @@ class Layout extends Component {
                 let thisPosY = j;
                 let startPosX = (thisPosX === 0) ? thisPosX : thisPosX - 1;
                 let startPosY = (thisPosY === 0) ? thisPosY : thisPosY - 1;
-                let endPosX =   (thisPosX + 1 === oldBoard.length) ? thisPosX : thisPosX + 1;
-                let endPosY =   (thisPosY + 1 === oldBoard[i].length) ? thisPosY : thisPosY + 1;
+                let endPosX = (thisPosX + 1 === oldBoard.length) ? thisPosX : thisPosX + 1;
+                let endPosY = (thisPosY + 1 === oldBoard[i].length) ? thisPosY : thisPosY + 1;
                 for (var k = startPosX; k <= endPosX; k++) {
                     for (var l = startPosY; l <= endPosY; l++) {
                         if (oldBoard[k][l] === "alive") {
@@ -63,7 +64,7 @@ class Layout extends Component {
             }
             newBoard.push(row);
         }
-        this.setState({ board: newBoard});
+        this.setState({ board: newBoard });
     }
 
     startTimer() {
@@ -76,6 +77,19 @@ class Layout extends Component {
         clearInterval(this.state.timer);
     }
 
+    clearBoard() {
+        clearInterval(this.state.timer);
+        let emptyBoard = [];
+        for (var i = 0; i < this.state.rows; i++) {
+            let row = [];
+            for (var j = 0; j < this.state.cols; j++) {
+                row.push("dead");
+            }
+            emptyBoard.push(row);
+        }
+        this.setState({ board: emptyBoard });
+    }
+
     componentWillMount() {
         this.generateRandomBoard();
     }
@@ -86,15 +100,16 @@ class Layout extends Component {
                 <h1>Game of Life</h1>
                 <div className="main">
                     <Grid board={this.state.board} />
-                    <button onClick={this.generateRandomBoard.bind(this)}>Generate new board</button>
-                    <button onClick={this.nextStep.bind(this)}>Next step</button>
-                    <button onClick={this.startTimer.bind(this)}>Start</button>
-                    <button onClick={this.stopTimer.bind(this)}>Stop</button>
+                    <button onClick={this.generateRandomBoard.bind(this) }>Generate new board</button>
+                    <button onClick={this.nextStep.bind(this) }>Next step</button>
+                    <button onClick={this.startTimer.bind(this) }>Start</button>
+                    <button onClick={this.stopTimer.bind(this) }>Pause</button>
                     <input onChange={event => {
-                            let ms = event.target.value;
-                            this.setState({ ms });
-                        }}
+                        let ms = event.target.value;
+                        this.setState({ ms });
+                    } }
                         value={this.state.ms}></input>
+                    <button onClick={this.clearBoard.bind(this) }>Clear board</button>
                 </div>
                 <footer className="footer">
                     Coded by <a href="https://github.com/matt2112" target="_blank">Matt Lewis</a>
