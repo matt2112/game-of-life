@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 
+import Grid from './Grid';
+
 class Layout extends Component {
 
     constructor() {
@@ -14,9 +16,9 @@ class Layout extends Component {
     render() {
         return (
             <div className="wrapper">
-                <h1>React Boilerplate</h1>
+                <h1>Game of Life</h1>
                 <div className="main">
-                    <p>Lorem ipsum dolor sit amet, mundi omittantur pro ad. Vivendum vituperatoribus ut pri, ne mea persius vituperata comprehensam. Mel feugait albucius sapientem no. Eius accusamus consetetur eu vis, epicurei quaerendum reformidans eu eos, ne duo quot purto tractatos.</p>
+                   <Grid />
                 </div>
                 <footer className="footer">
                     Coded by <a href="https://github.com/matt2112" target="_blank">Matt Lewis</a>
