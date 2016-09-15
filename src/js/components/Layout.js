@@ -23,7 +23,7 @@ class Layout extends Component {
         for (var i = 0; i < this.state.rows; i++) {
             let row = [];
             for (var j = 0; j < this.state.cols; j++) {
-                let cell = Math.random() > 0.98 ? "alive" : "dead";
+                let cell = Math.random() > 0.85 ? "alive" : "dead";
                 row.push(cell);
             }
             board.push(row);
@@ -51,14 +51,18 @@ class Layout extends Component {
                         }
                     }
                 }
+                let cell = "";
                 if (oldBoard[i][j] === "alive") {
                     neighbours -= 1;
-                }
-                let cell = "dead";
-                if (neighbours > 1 && neighbours < 4) {
-                    cell = "alive";
+                    if (neighbours === 2 || neighbours === 3) { 
+                        cell = "alive";
+                    } else {
+                        cell= "dead";
+                    }
                 } else {
-                    cell = "dead";
+                    if (neighbours === 3) {
+                        cell = "alive";
+                    }
                 }
                 row.push(cell);
             }
