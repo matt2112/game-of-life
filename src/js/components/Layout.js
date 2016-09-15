@@ -12,13 +12,15 @@ class Layout extends Component {
             cols: 50,
             board: [],
             timer: 0,
-            ms: 500
+            ms: 500,
+            generation: 0
         };
 
     }
 
     generateRandomBoard() {
         clearInterval(this.state.timer);
+        this.state.generation = 0;
         let board = [];
         for (var i = 0; i < this.state.rows; i++) {
             let row = [];
@@ -34,6 +36,7 @@ class Layout extends Component {
     nextStep() {
         let oldBoard = this.state.board;
         let newBoard = [];
+        let finished = true;
         for (var i = 0; i < oldBoard.length; i++) {
             let row = [];
             for (var j = 0; j < oldBoard[i].length; j++) {
@@ -48,6 +51,7 @@ class Layout extends Component {
                     for (var l = startPosY; l <= endPosY; l++) {
                         if (oldBoard[k][l] === "alive") {
                             neighbours += 1;
+                            finished = false;
                         }
                     }
                 }
@@ -69,6 +73,13 @@ class Layout extends Component {
             newBoard.push(row);
         }
         this.setState({ board: newBoard });
+
+        if (finished) {
+            this.stopTimer();
+        } else {
+            let generation = this.state.generation += 1; 
+            this.setState({ generation });
+        }
     }
 
     startTimer() {
@@ -92,6 +103,7 @@ class Layout extends Component {
             emptyBoard.push(row);
         }
         this.setState({ board: emptyBoard });
+        this.setState({ generation: 0 });
     }
 
     toggleCell(row, col) {
@@ -106,6 +118,7 @@ class Layout extends Component {
 
     componentWillMount() {
         this.generateRandomBoard();
+        this.startTimer();
     }
 
     render() {
@@ -126,6 +139,8 @@ class Layout extends Component {
                     } }
                         value={this.state.ms}></input>
                     <button onClick={this.clearBoard.bind(this) }>Clear board</button>
+                    <h3>Generation: {this.state.generation}</h3>
+                    <p>Read about Conway's Game of Life <a href="https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life" target="_blank">here</a>.</p>
                 </div>
                 <footer className="footer">
                     Coded by <a href="https://github.com/matt2112" target="_blank">Matt Lewis</a>
