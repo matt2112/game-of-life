@@ -33,7 +33,6 @@ class Layout extends Component {
 
     nextStep() {
         let oldBoard = this.state.board;
-        // console.log(oldBoard);
         let newBoard = [];
         for (var i = 0; i < oldBoard.length; i++) {
             let row = [];
@@ -65,7 +64,6 @@ class Layout extends Component {
             }
             newBoard.push(row);
         }
-        // console.log(newBoard);
         this.setState({ board: newBoard });
     }
 
@@ -92,14 +90,16 @@ class Layout extends Component {
         this.setState({ board: emptyBoard });
     }
 
-    toggleCell() {
-        if (this.state.type === "dead") {
-            this.setState({ type: "alive" });
+    toggleCell(row, col) {
+        let board = this.state.board;
+        if (board[row][col] === "dead") {
+            board[row][col] = "alive";
         } else {
-            this.setState({ type: "dead" });
+            board[row][col] = "dead";
         }
+        this.setState({ board });
     }
-    
+
     componentWillMount() {
         this.generateRandomBoard();
     }
@@ -109,7 +109,9 @@ class Layout extends Component {
             <div className="wrapper">
                 <h1>Game of Life</h1>
                 <div className="main">
-                    <Grid board={this.state.board} />
+                    <Grid
+                        board={this.state.board}
+                        toggleCell={this.toggleCell.bind(this) } />
                     <button onClick={this.generateRandomBoard.bind(this) }>Generate new board</button>
                     <button onClick={this.nextStep.bind(this) }>Next step</button>
                     <button onClick={this.startTimer.bind(this) }>Start</button>
