@@ -1,21 +1,13 @@
 import React, { Component } from 'react';
 
-class Cell extends Component {
-    constructor() {
-        super();
+const Cell = (props) => {
 
-        this.state = {
+    return (
+        <td className={props.type}>
 
-        };
-    }
-
-    render() {
-
-        return (
-            <td className={this.props.type}>
-            </td>
-        )
-    }
+        </td>
+    )
 }
+
 
 export default Cell;

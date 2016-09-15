@@ -33,6 +33,7 @@ class Layout extends Component {
 
     nextStep() {
         let oldBoard = this.state.board;
+        // console.log(oldBoard);
         let newBoard = [];
         for (var i = 0; i < oldBoard.length; i++) {
             let row = [];
@@ -64,6 +65,7 @@ class Layout extends Component {
             }
             newBoard.push(row);
         }
+        // console.log(newBoard);
         this.setState({ board: newBoard });
     }
 
@@ -90,6 +92,14 @@ class Layout extends Component {
         this.setState({ board: emptyBoard });
     }
 
+    toggleCell() {
+        if (this.state.type === "dead") {
+            this.setState({ type: "alive" });
+        } else {
+            this.setState({ type: "dead" });
+        }
+    }
+    
     componentWillMount() {
         this.generateRandomBoard();
     }
