@@ -10,10 +10,11 @@ html {
 body {
     font-family: 'Alegreya', serif;
     color: $black;
+    background-color: lightcoral;
 }
 
 .main {
-    max-width: 1000px;
+    max-width: 90%;
     margin: 0 auto;
     position: relative;
     border: {
@@ -39,9 +40,11 @@ h1 {
     color: #444;
 }
 
-table {
+.grid {
+    width: 100%;
     margin: 0 auto;
     border-collapse: collapse;
+    background-color: #fff;
 }
 
 td {
@@ -56,4 +59,15 @@ td {
 
 .alive {
     background-color: $black;
+}
+
+.controls {
+    
+}
+
+button {
+    margin: {
+        top: 20px;
+        right: 10px;
+    }
 }

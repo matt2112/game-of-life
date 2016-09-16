@@ -116,6 +116,16 @@ class Layout extends Component {
         this.setState({ board });
     }
 
+    setWidth(cols) {
+        this.setState({ cols });
+        this.generateRandomBoard();
+    }
+
+    setHeight(rows) {
+        this.setState({ rows });
+        this.generateRandomBoard();
+    }
+
     componentWillMount() {
         this.generateRandomBoard();
         this.startTimer();
@@ -129,18 +139,33 @@ class Layout extends Component {
                     <Grid
                         board={this.state.board}
                         toggleCell={this.toggleCell.bind(this) } />
-                    <button onClick={this.generateRandomBoard.bind(this) }>Generate new board</button>
-                    <button onClick={this.nextStep.bind(this) }>Next step</button>
-                    <button onClick={this.startTimer.bind(this) }>Start</button>
-                    <button onClick={this.stopTimer.bind(this) }>Pause</button>
-                    <input onChange={event => {
-                        let ms = event.target.value;
-                        this.setState({ ms });
-                    } }
-                        value={this.state.ms}></input>
-                    <button onClick={this.clearBoard.bind(this) }>Clear board</button>
-                    <h3>Generation: {this.state.generation}</h3>
-                    <p>Read about Conway's Game of Life <a href="https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life" target="_blank">here</a>.</p>
+                    <div className ="controls">
+                        <button onClick={this.generateRandomBoard.bind(this) }>Generate new board</button>
+                        <button onClick={this.nextStep.bind(this) }>Next step</button>
+                        <button onClick={this.startTimer.bind(this) }>Start</button>
+                        <button onClick={this.stopTimer.bind(this) }>Pause</button>
+                        <button onClick={this.clearBoard.bind(this) }>Clear board</button>
+                        <p>Time between generations (in ms):</p>
+                        <input onChange={event => {
+                            let ms = event.target.value;
+                            this.setState({ ms });
+                        } }
+                            value={this.state.ms}></input>
+                        
+                        <p>Rows:</p>
+                        <input onChange={event => {
+                            let rows = event.target.value;
+                            this.setHeight(rows); }}
+                            value={this.state.rows}
+                        ></input>
+                        <p>Columns:</p>
+                        <input onChange={event => {
+                            let cols = event.target.value;
+                            this.setWidth(cols); }}
+                            value={this.state.cols}></input>
+                        <h3>Generation: {this.state.generation}</h3>
+                        <p>Read about Conway's Game of Life <a href="https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life" target="_blank">here</a>.</p>
+                    </div>
                 </div>
                 <footer className="footer">
                     Coded by <a href="https://github.com/matt2112" target="_blank">Matt Lewis</a>
