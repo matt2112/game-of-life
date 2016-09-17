@@ -9,7 +9,7 @@ class Layout extends Component {
 
         this.state = {
             rows: 20,
-            cols: 50,
+            cols: 40,
             board: [],
             timer: 0,
             ms: 500,
@@ -36,7 +36,8 @@ class Layout extends Component {
     nextStep() {
         let oldBoard = this.state.board;
         let newBoard = [];
-        let finished = true;
+        let empty = true;
+        let changed = false;
         for (var i = 0; i < oldBoard.length; i++) {
             let row = [];
             for (var j = 0; j < oldBoard[i].length; j++) {
@@ -51,21 +52,33 @@ class Layout extends Component {
                     for (var l = startPosY; l <= endPosY; l++) {
                         if (oldBoard[k][l] === "alive" || oldBoard[k][l] === "new") {
                             neighbours += 1;
-                            finished = false;
+                            empty = false;
                         }
                     }
                 }
                 let cell = "";
-                if (oldBoard[i][j] === "alive" || oldBoard[i][j] === "new") {
+                if (oldBoard[i][j] === "new") {
                     neighbours -= 1;
-                    if (neighbours === 2 || neighbours === 3) { 
+                    changed = true;
+                    if (neighbours === 2 || neighbours === 3) {
                         cell = "alive";
                     } else {
                         cell= "dead";
                     }
+                } else if (oldBoard[i][j] === "alive") {
+                    neighbours -= 1;
+                    if (neighbours < 2 || neighbours > 3) {
+                        changed = true;
+                        cell = "dead";
+                    } else {
+                        cell = "alive";
+                    }
                 } else {
                     if (neighbours === 3) {
+                        changed = true;
                         cell = "new";
+                    } else {
+                        cell = "dead";
                     }
                 }
                 row.push(cell);
@@ -74,7 +87,7 @@ class Layout extends Component {
         }
         this.setState({ board: newBoard });
 
-        if (finished) {
+        if (empty || !changed) {
             this.stopTimer();
         } else {
             let generation = this.state.generation += 1; 
@@ -177,7 +190,7 @@ class Layout extends Component {
                                 value={this.state.cols}></input>
                         </div>
                         <h3>Generation: {this.state.generation}</h3>
-                        <p>Read about Conway's Game of Life <a href="https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life" target="_blank">here</a>.</p>
+                        <p className="bottomElement">White cells are 'dead', grey cells are new and black cells are older. Click to add and remove cells. Read about Conway's Game of Life <a href="https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life" target="_blank">here</a>.</p>
                     </div>
                 </div>
                 <footer className="footer">
