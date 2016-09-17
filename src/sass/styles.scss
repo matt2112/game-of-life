@@ -61,6 +61,10 @@ td {
     background-color: $black;
 }
 
+.new {
+    background-color: #999;
+}
+
 .controls {
     
 }
@@ -70,4 +74,13 @@ button {
         top: 20px;
         right: 10px;
     }
+}
+
+input {
+    width: 50px;
+    margin-top: 10px;
+}
+
+label {
+    margin-right: 10px; 
 }

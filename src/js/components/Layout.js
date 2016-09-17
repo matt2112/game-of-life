@@ -25,7 +25,7 @@ class Layout extends Component {
         for (var i = 0; i < this.state.rows; i++) {
             let row = [];
             for (var j = 0; j < this.state.cols; j++) {
-                let cell = Math.random() > 0.85 ? "alive" : "dead";
+                let cell = Math.random() > 0.85 ? "new" : "dead";
                 row.push(cell);
             }
             board.push(row);
@@ -49,14 +49,14 @@ class Layout extends Component {
                 let endPosY = (thisPosY + 1 === oldBoard[i].length) ? thisPosY : thisPosY + 1;
                 for (var k = startPosX; k <= endPosX; k++) {
                     for (var l = startPosY; l <= endPosY; l++) {
-                        if (oldBoard[k][l] === "alive") {
+                        if (oldBoard[k][l] === "alive" || oldBoard[k][l] === "new") {
                             neighbours += 1;
                             finished = false;
                         }
                     }
                 }
                 let cell = "";
-                if (oldBoard[i][j] === "alive") {
+                if (oldBoard[i][j] === "alive" || oldBoard[i][j] === "new") {
                     neighbours -= 1;
                     if (neighbours === 2 || neighbours === 3) { 
                         cell = "alive";
@@ -65,7 +65,7 @@ class Layout extends Component {
                     }
                 } else {
                     if (neighbours === 3) {
-                        cell = "alive";
+                        cell = "new";
                     }
                 }
                 row.push(cell);
@@ -109,7 +109,7 @@ class Layout extends Component {
     toggleCell(row, col) {
         let board = this.state.board;
         if (board[row][col] === "dead") {
-            board[row][col] = "alive";
+            board[row][col] = "new";
         } else {
             board[row][col] = "dead";
         }
@@ -117,13 +117,19 @@ class Layout extends Component {
     }
 
     setWidth(cols) {
-        this.setState({ cols });
-        this.generateRandomBoard();
+        if (cols <= 100) {
+            this.setState({ cols },
+                this.generateRandomBoard
+            );
+        }
     }
 
     setHeight(rows) {
-        this.setState({ rows });
-        this.generateRandomBoard();
+        if (rows <= 100) {
+            this.setState({ rows },
+                this.generateRandomBoard
+            );
+        }
     }
 
     componentWillMount() {
@@ -140,29 +146,36 @@ class Layout extends Component {
                         board={this.state.board}
                         toggleCell={this.toggleCell.bind(this) } />
                     <div className ="controls">
-                        <button onClick={this.generateRandomBoard.bind(this) }>Generate new board</button>
-                        <button onClick={this.nextStep.bind(this) }>Next step</button>
-                        <button onClick={this.startTimer.bind(this) }>Start</button>
-                        <button onClick={this.stopTimer.bind(this) }>Pause</button>
-                        <button onClick={this.clearBoard.bind(this) }>Clear board</button>
-                        <p>Time between generations (in ms):</p>
-                        <input onChange={event => {
-                            let ms = event.target.value;
-                            this.setState({ ms });
-                        } }
-                            value={this.state.ms}></input>
-                        
-                        <p>Rows:</p>
-                        <input onChange={event => {
-                            let rows = event.target.value;
-                            this.setHeight(rows); }}
-                            value={this.state.rows}
-                        ></input>
-                        <p>Columns:</p>
-                        <input onChange={event => {
-                            let cols = event.target.value;
-                            this.setWidth(cols); }}
-                            value={this.state.cols}></input>
+                        <div className="buttons">
+                            <button onClick={this.generateRandomBoard.bind(this) }>Generate new board</button>
+                            <button onClick={this.nextStep.bind(this) }>Next step</button>
+                            <button onClick={this.startTimer.bind(this) }>Start</button>
+                            <button onClick={this.stopTimer.bind(this) }>Pause</button>
+                            <button onClick={this.clearBoard.bind(this) }>Clear board</button>
+                        </div>
+                        <div className="time">
+                            <label>Time between generations (in ms):</label>
+                            <input onChange={event => {
+                                let ms = event.target.value;
+                                this.setState({ ms });
+                            } }
+                                value={this.state.ms}></input>
+                        </div>
+                        <div className="rows">
+                            <label>Rows (max 100):</label>
+                            <input onChange={event => {
+                                let rows = event.target.value;
+                                this.setHeight(rows); }}
+                                value={this.state.rows}
+                            ></input>
+                        </div>
+                        <div className="cols">
+                            <label>Columns (max 100):</label>
+                            <input onChange={event => {
+                                let cols = event.target.value;
+                                this.setWidth(cols); }}
+                                value={this.state.cols}></input>
+                        </div>
                         <h3>Generation: {this.state.generation}</h3>
                         <p>Read about Conway's Game of Life <a href="https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life" target="_blank">here</a>.</p>
                     </div>
