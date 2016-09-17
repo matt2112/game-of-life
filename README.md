@@ -1,6 +1,4 @@
-**WORK IN PROGRESS**
-
-Game of Life simulator, built using React and SASS as part of the freeCodeCamp Data Visualization curriculum.
+Game of Life simulator, built using React and SASS as part of the freeCodeCamp Data Visualization curriculum. App can be viewed [here](https://matt2112.github.io/game-of-life/).
 
 To install run ````npm install````
 
