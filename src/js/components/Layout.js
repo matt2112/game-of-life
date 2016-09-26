@@ -8,8 +8,8 @@ class Layout extends Component {
         super();
 
         this.state = {
-            rows: 20,
-            cols: 40,
+            rows: 15,
+            cols: 15,
             board: [],
             timer: 0,
             ms: 500,
@@ -127,22 +127,35 @@ class Layout extends Component {
     }
 
     setWidth(cols) {
-        if (cols <= 100) {
+        if (cols > 0 && cols <= 100) {
             this.setState({ cols },
                 this.generateRandomBoard
             );
+        } else if (cols === "") {
+            this.setState({cols});
         }
     }
 
     setHeight(rows) {
-        if (rows <= 100) {
+        if (rows > 0 && rows <= 100) {
             this.setState({ rows },
                 this.generateRandomBoard
             );
+        } else if (rows === "") {
+            this.setState({rows});
         }
     }
 
     componentWillMount() {
+
+        if (window.innerWidth > 992) {
+            this.setWidth(44);
+            this.setHeight(22);
+        } else if (window.innerWidth > 768) {
+            this.setWidth(30);
+            this.setHeight(20);
+        }
+
         this.generateRandomBoard();
         this.startTimer();
     }

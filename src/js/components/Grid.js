@@ -6,9 +6,11 @@ const Grid = (props) => {
 
     const rows = [];
     const board = props.board;
-    for (let i = 0; i < board.length; i++) {
+    const height = board.length;
+    const width = board[0].length;
+    for (let i = 0; i < height; i++) {
         const row = [];
-        for (let j = 0; j < board[i].length; j++) {
+        for (let j = 0; j < width; j++) {
             row.push(<Cell
                         type={board[i][j]}
                         key={"col" + j}
