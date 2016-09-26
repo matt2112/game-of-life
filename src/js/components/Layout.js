@@ -21,7 +21,7 @@ class Layout extends Component {
 
     // Stops timer if running and creates a new board.
     generateRandomBoard() {
-
+        this.stopTimer();
         this.state.generation = 0;
         let board = [];
         for (let i = 0; i < this.state.rows; i++) {
@@ -162,10 +162,8 @@ class Layout extends Component {
 
     // Generates a random board when app loads and sets timer going.
     componentWillMount() {
-
         this.generateRandomBoard();
         this.startTimer();
-
     }
 
     render() {
