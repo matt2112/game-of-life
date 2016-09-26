@@ -17,6 +17,7 @@ class Layout extends Component {
         };
     }
 
+    // Stops timer if running and creates a new board.
     generateRandomBoard() {
         clearInterval(this.state.timer);
         this.state.generation = 0;
@@ -32,11 +33,14 @@ class Layout extends Component {
         this.setState({ board });
     }
 
+    // Loops through every cell and applies Conway's algorithm to determine
+    // the layout of the board at the next generation.
     nextStep() {
         const oldBoard = this.state.board;
         const newBoard = [];
         let empty = true;
         let changed = false;
+        // Loop through each row of the board.
         for (let posX = 0; posX < oldBoard.length; posX++) {
             const row = [];
             for (let posY = 0; posY < oldBoard[posX].length; posY++) {
@@ -54,6 +58,8 @@ class Layout extends Component {
                     }
                 }
                 let cell = "";
+                // Determine cell type based on number of neighbours.
+                // If cell is already occupied, remove from neighbour count.
                 if (oldBoard[posX][posY] === "new") {
                     neighbours -= 1;
                     changed = true;
@@ -116,6 +122,7 @@ class Layout extends Component {
         this.setState({ generation: 0 });
     }
 
+    // Creates a new cell if dead, or a dead cell if new or alive.
     toggleCell(row, col) {
         const board = this.state.board;
         if (board[row][col] === "dead") {
@@ -146,6 +153,8 @@ class Layout extends Component {
         }
     }
 
+    // Runs when app first loads. Checks the screen size to determine
+    // an appropriate number of cells based on the width of the screen.
     componentWillMount() {
 
         if (window.innerWidth > 992) {
