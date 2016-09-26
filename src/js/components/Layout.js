@@ -7,19 +7,21 @@ class Layout extends Component {
     constructor() {
         super();
 
+        // Default size of board is determined by size of screen.
         this.state = {
-            rows: 15,
-            cols: 15,
+            rows: (window.innerWidth > 992) ? 22 : (window.innerWidth > 768) ? 20: 15,
+            cols: (window.innerWidth > 992) ? 44 : (window.innerWidth > 768) ? 30: 15,
             board: [],
             timer: 0,
             ms: 500,
             generation: 0
         };
+
     }
 
     // Stops timer if running and creates a new board.
     generateRandomBoard() {
-        clearInterval(this.state.timer);
+
         this.state.generation = 0;
         let board = [];
         for (let i = 0; i < this.state.rows; i++) {
@@ -41,16 +43,19 @@ class Layout extends Component {
         let empty = true;
         let changed = false;
         // Loop through each row of the board.
-        for (let posX = 0; posX < oldBoard.length; posX++) {
+        for (let posY = 0; posY < oldBoard.length; posY++) {
             const row = [];
-            for (let posY = 0; posY < oldBoard[posX].length; posY++) {
+            const startPosY = (posY === 0) ? posY : posY - 1;
+            const endPosY = (posY + 1 === oldBoard.length) ? posY : posY + 1;
+            // Loop through each cell of the row.
+            for (let posX = 0; posX < oldBoard[posY].length; posX++) {
                 let neighbours = 0;
                 const startPosX = (posX === 0) ? posX : posX - 1;
-                const startPosY = (posY === 0) ? posY : posY - 1;
-                const endPosX = (posX + 1 === oldBoard.length) ? posX : posX + 1;
-                const endPosY = (posY + 1 === oldBoard[posX].length) ? posY : posY + 1;
-                for (let i = startPosX; i <= endPosX; i++) {
-                    for (let j = startPosY; j <= endPosY; j++) {
+                const endPosX = (posX + 1 === oldBoard[posY].length) ? posX : posX + 1;
+                // Loop around surrounding cells (including tested cell)
+                // to count number of alive or new neighbours.
+                for (let i = startPosY; i <= endPosY; i++) {
+                    for (let j = startPosX; j <= endPosX; j++) {
                         if (oldBoard[i][j] === "alive" || oldBoard[i][j] === "new") {
                             neighbours += 1;
                             empty = false;
@@ -58,9 +63,9 @@ class Layout extends Component {
                     }
                 }
                 let cell = "";
-                // Determine cell type based on number of neighbours.
+                // Determine new cell type based on number of neighbours.
                 // If cell is already occupied, remove from neighbour count.
-                if (oldBoard[posX][posY] === "new") {
+                if (oldBoard[posY][posX] === "new") {
                     neighbours -= 1;
                     changed = true;
                     if (neighbours === 2 || neighbours === 3) {
@@ -68,7 +73,7 @@ class Layout extends Component {
                     } else {
                         cell = "dead";
                     }
-                } else if (oldBoard[posX][posY] === "alive") {
+                } else if (oldBoard[posY][posX] === "alive") {
                     neighbours -= 1;
                     if (neighbours < 2 || neighbours > 3) {
                         changed = true;
@@ -90,6 +95,8 @@ class Layout extends Component {
         }
         this.setState({ board: newBoard });
 
+        // Stop the timer if the board is now empty or nothing has changed.
+        // Otherwise increase the generation count by one.
         if (empty || !changed) {
             this.stopTimer();
         } else {
@@ -153,20 +160,12 @@ class Layout extends Component {
         }
     }
 
-    // Runs when app first loads. Checks the screen size to determine
-    // an appropriate number of cells based on the width of the screen.
+    // Generates a random board when app loads and sets timer going.
     componentWillMount() {
-
-        if (window.innerWidth > 992) {
-            this.setWidth(44);
-            this.setHeight(22);
-        } else if (window.innerWidth > 768) {
-            this.setWidth(30);
-            this.setHeight(20);
-        }
 
         this.generateRandomBoard();
         this.startTimer();
+
     }
 
     render() {
