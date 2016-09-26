@@ -21896,7 +21896,7 @@
 	    (0, _createClass3.default)(Layout, [{
 	        key: 'generateRandomBoard',
 	        value: function generateRandomBoard() {
-
+	            this.stopTimer();
 	            this.state.generation = 0;
 	            var board = [];
 	            for (var i = 0; i < this.state.rows; i++) {
@@ -22047,7 +22047,6 @@
 	    }, {
 	        key: 'componentWillMount',
 	        value: function componentWillMount() {
-
 	            this.generateRandomBoard();
 	            this.startTimer();
 	        }
