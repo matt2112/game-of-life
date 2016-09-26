@@ -4,11 +4,11 @@ import Cell from './Cell';
 
 const Grid = (props) => {
 
-    let rows = [];
-    let board = props.board;
-    for (var i = 0; i < board.length; i++) {
-        let row = [];
-        for (var j = 0; j < board[i].length; j++) {
+    const rows = [];
+    const board = props.board;
+    for (let i = 0; i < board.length; i++) {
+        const row = [];
+        for (let j = 0; j < board[i].length; j++) {
             row.push(<Cell
                         type={board[i][j]}
                         key={"col" + j}

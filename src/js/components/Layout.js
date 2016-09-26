@@ -15,17 +15,16 @@ class Layout extends Component {
             ms: 500,
             generation: 0
         };
-
     }
 
     generateRandomBoard() {
         clearInterval(this.state.timer);
         this.state.generation = 0;
         let board = [];
-        for (var i = 0; i < this.state.rows; i++) {
-            let row = [];
-            for (var j = 0; j < this.state.cols; j++) {
-                let cell = Math.random() > 0.85 ? "new" : "dead";
+        for (let i = 0; i < this.state.rows; i++) {
+            const row = [];
+            for (let j = 0; j < this.state.cols; j++) {
+                const cell = Math.random() > 0.85 ? "new" : "dead";
                 row.push(cell);
             }
             board.push(row);
@@ -34,38 +33,36 @@ class Layout extends Component {
     }
 
     nextStep() {
-        let oldBoard = this.state.board;
-        let newBoard = [];
+        const oldBoard = this.state.board;
+        const newBoard = [];
         let empty = true;
         let changed = false;
-        for (var i = 0; i < oldBoard.length; i++) {
-            let row = [];
-            for (var j = 0; j < oldBoard[i].length; j++) {
+        for (let posX = 0; posX < oldBoard.length; posX++) {
+            const row = [];
+            for (let posY = 0; posY < oldBoard[posX].length; posY++) {
                 let neighbours = 0;
-                let thisPosX = i;
-                let thisPosY = j;
-                let startPosX = (thisPosX === 0) ? thisPosX : thisPosX - 1;
-                let startPosY = (thisPosY === 0) ? thisPosY : thisPosY - 1;
-                let endPosX = (thisPosX + 1 === oldBoard.length) ? thisPosX : thisPosX + 1;
-                let endPosY = (thisPosY + 1 === oldBoard[i].length) ? thisPosY : thisPosY + 1;
-                for (var k = startPosX; k <= endPosX; k++) {
-                    for (var l = startPosY; l <= endPosY; l++) {
-                        if (oldBoard[k][l] === "alive" || oldBoard[k][l] === "new") {
+                const startPosX = (posX === 0) ? posX : posX - 1;
+                const startPosY = (posY === 0) ? posY : posY - 1;
+                const endPosX = (posX + 1 === oldBoard.length) ? posX : posX + 1;
+                const endPosY = (posY + 1 === oldBoard[posX].length) ? posY : posY + 1;
+                for (let i = startPosX; i <= endPosX; i++) {
+                    for (let j = startPosY; j <= endPosY; j++) {
+                        if (oldBoard[i][j] === "alive" || oldBoard[i][j] === "new") {
                             neighbours += 1;
                             empty = false;
                         }
                     }
                 }
                 let cell = "";
-                if (oldBoard[i][j] === "new") {
+                if (oldBoard[posX][posY] === "new") {
                     neighbours -= 1;
                     changed = true;
                     if (neighbours === 2 || neighbours === 3) {
                         cell = "alive";
                     } else {
-                        cell= "dead";
+                        cell = "dead";
                     }
-                } else if (oldBoard[i][j] === "alive") {
+                } else if (oldBoard[posX][posY] === "alive") {
                     neighbours -= 1;
                     if (neighbours < 2 || neighbours > 3) {
                         changed = true;
@@ -90,14 +87,14 @@ class Layout extends Component {
         if (empty || !changed) {
             this.stopTimer();
         } else {
-            let generation = this.state.generation += 1; 
+            const generation = this.state.generation += 1; 
             this.setState({ generation });
         }
     }
 
     startTimer() {
         clearInterval(this.state.timer);
-        let timer = setInterval(this.nextStep.bind(this), this.state.ms);
+        const timer = setInterval(this.nextStep.bind(this), this.state.ms);
         this.setState({ timer });
     }
 
@@ -107,10 +104,10 @@ class Layout extends Component {
 
     clearBoard() {
         clearInterval(this.state.timer);
-        let emptyBoard = [];
-        for (var i = 0; i < this.state.rows; i++) {
-            let row = [];
-            for (var j = 0; j < this.state.cols; j++) {
+        const emptyBoard = [];
+        for (let i = 0; i < this.state.rows; i++) {
+            const row = [];
+            for (let j = 0; j < this.state.cols; j++) {
                 row.push("dead");
             }
             emptyBoard.push(row);
@@ -120,7 +117,7 @@ class Layout extends Component {
     }
 
     toggleCell(row, col) {
-        let board = this.state.board;
+        const board = this.state.board;
         if (board[row][col] === "dead") {
             board[row][col] = "new";
         } else {
@@ -169,7 +166,7 @@ class Layout extends Component {
                         <div className="time">
                             <label>Time between generations (in ms):</label>
                             <input onChange={event => {
-                                let ms = event.target.value;
+                                const ms = event.target.value;
                                 this.setState({ ms });
                             } }
                                 value={this.state.ms}></input>
@@ -177,7 +174,7 @@ class Layout extends Component {
                         <div className="rows">
                             <label>Rows (max 100):</label>
                             <input onChange={event => {
-                                let rows = event.target.value;
+                                const rows = event.target.value;
                                 this.setHeight(rows); }}
                                 value={this.state.rows}
                             ></input>
@@ -185,7 +182,7 @@ class Layout extends Component {
                         <div className="cols">
                             <label>Columns (max 100):</label>
                             <input onChange={event => {
-                                let cols = event.target.value;
+                                const cols = event.target.value;
                                 this.setWidth(cols); }}
                                 value={this.state.cols}></input>
                         </div>
