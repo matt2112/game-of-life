@@ -7,9 +7,10 @@ class Layout extends Component {
     constructor() {
         super();
 
+        // Default size of board is determined by size of screen.
         this.state = {
-            rows: 20,
-            cols: 40,
+            rows: (window.innerWidth > 992) ? 22 : (window.innerWidth > 768) ? 20: 15,
+            cols: (window.innerWidth > 992) ? 44 : (window.innerWidth > 768) ? 30: 15,
             board: [],
             timer: 0,
             ms: 500,
@@ -18,14 +19,15 @@ class Layout extends Component {
 
     }
 
+    // Stops timer if running and creates a new board.
     generateRandomBoard() {
-        clearInterval(this.state.timer);
+
         this.state.generation = 0;
         let board = [];
-        for (var i = 0; i < this.state.rows; i++) {
-            let row = [];
-            for (var j = 0; j < this.state.cols; j++) {
-                let cell = Math.random() > 0.85 ? "new" : "dead";
+        for (let i = 0; i < this.state.rows; i++) {
+            const row = [];
+            for (let j = 0; j < this.state.cols; j++) {
+                const cell = Math.random() > 0.85 ? "new" : "dead";
                 row.push(cell);
             }
             board.push(row);
@@ -33,39 +35,45 @@ class Layout extends Component {
         this.setState({ board });
     }
 
+    // Loops through every cell and applies Conway's algorithm to determine
+    // the layout of the board at the next generation.
     nextStep() {
-        let oldBoard = this.state.board;
-        let newBoard = [];
+        const oldBoard = this.state.board;
+        const newBoard = [];
         let empty = true;
         let changed = false;
-        for (var i = 0; i < oldBoard.length; i++) {
-            let row = [];
-            for (var j = 0; j < oldBoard[i].length; j++) {
+        // Loop through each row of the board.
+        for (let posY = 0; posY < oldBoard.length; posY++) {
+            const row = [];
+            const startPosY = (posY === 0) ? posY : posY - 1;
+            const endPosY = (posY + 1 === oldBoard.length) ? posY : posY + 1;
+            // Loop through each cell of the row.
+            for (let posX = 0; posX < oldBoard[posY].length; posX++) {
                 let neighbours = 0;
-                let thisPosX = i;
-                let thisPosY = j;
-                let startPosX = (thisPosX === 0) ? thisPosX : thisPosX - 1;
-                let startPosY = (thisPosY === 0) ? thisPosY : thisPosY - 1;
-                let endPosX = (thisPosX + 1 === oldBoard.length) ? thisPosX : thisPosX + 1;
-                let endPosY = (thisPosY + 1 === oldBoard[i].length) ? thisPosY : thisPosY + 1;
-                for (var k = startPosX; k <= endPosX; k++) {
-                    for (var l = startPosY; l <= endPosY; l++) {
-                        if (oldBoard[k][l] === "alive" || oldBoard[k][l] === "new") {
+                const startPosX = (posX === 0) ? posX : posX - 1;
+                const endPosX = (posX + 1 === oldBoard[posY].length) ? posX : posX + 1;
+                // Loop around surrounding cells (including tested cell)
+                // to count number of alive or new neighbours.
+                for (let i = startPosY; i <= endPosY; i++) {
+                    for (let j = startPosX; j <= endPosX; j++) {
+                        if (oldBoard[i][j] === "alive" || oldBoard[i][j] === "new") {
                             neighbours += 1;
                             empty = false;
                         }
                     }
                 }
                 let cell = "";
-                if (oldBoard[i][j] === "new") {
+                // Determine new cell type based on number of neighbours.
+                // If cell is already occupied, remove from neighbour count.
+                if (oldBoard[posY][posX] === "new") {
                     neighbours -= 1;
                     changed = true;
                     if (neighbours === 2 || neighbours === 3) {
                         cell = "alive";
                     } else {
-                        cell= "dead";
+                        cell = "dead";
                     }
-                } else if (oldBoard[i][j] === "alive") {
+                } else if (oldBoard[posY][posX] === "alive") {
                     neighbours -= 1;
                     if (neighbours < 2 || neighbours > 3) {
                         changed = true;
@@ -87,17 +95,19 @@ class Layout extends Component {
         }
         this.setState({ board: newBoard });
 
+        // Stop the timer if the board is now empty or nothing has changed.
+        // Otherwise increase the generation count by one.
         if (empty || !changed) {
             this.stopTimer();
         } else {
-            let generation = this.state.generation += 1; 
+            const generation = this.state.generation += 1; 
             this.setState({ generation });
         }
     }
 
     startTimer() {
         clearInterval(this.state.timer);
-        let timer = setInterval(this.nextStep.bind(this), this.state.ms);
+        const timer = setInterval(this.nextStep.bind(this), this.state.ms);
         this.setState({ timer });
     }
 
@@ -107,10 +117,10 @@ class Layout extends Component {
 
     clearBoard() {
         clearInterval(this.state.timer);
-        let emptyBoard = [];
-        for (var i = 0; i < this.state.rows; i++) {
-            let row = [];
-            for (var j = 0; j < this.state.cols; j++) {
+        const emptyBoard = [];
+        for (let i = 0; i < this.state.rows; i++) {
+            const row = [];
+            for (let j = 0; j < this.state.cols; j++) {
                 row.push("dead");
             }
             emptyBoard.push(row);
@@ -119,8 +129,9 @@ class Layout extends Component {
         this.setState({ generation: 0 });
     }
 
+    // Creates a new cell if dead, or a dead cell if new or alive.
     toggleCell(row, col) {
-        let board = this.state.board;
+        const board = this.state.board;
         if (board[row][col] === "dead") {
             board[row][col] = "new";
         } else {
@@ -130,24 +141,31 @@ class Layout extends Component {
     }
 
     setWidth(cols) {
-        if (cols <= 100) {
+        if (cols > 0 && cols <= 100) {
             this.setState({ cols },
                 this.generateRandomBoard
             );
+        } else if (cols === "") {
+            this.setState({cols});
         }
     }
 
     setHeight(rows) {
-        if (rows <= 100) {
+        if (rows > 0 && rows <= 100) {
             this.setState({ rows },
                 this.generateRandomBoard
             );
+        } else if (rows === "") {
+            this.setState({rows});
         }
     }
 
+    // Generates a random board when app loads and sets timer going.
     componentWillMount() {
+
         this.generateRandomBoard();
         this.startTimer();
+
     }
 
     render() {
@@ -169,7 +187,7 @@ class Layout extends Component {
                         <div className="time">
                             <label>Time between generations (in ms):</label>
                             <input onChange={event => {
-                                let ms = event.target.value;
+                                const ms = event.target.value;
                                 this.setState({ ms });
                             } }
                                 value={this.state.ms}></input>
@@ -177,7 +195,7 @@ class Layout extends Component {
                         <div className="rows">
                             <label>Rows (max 100):</label>
                             <input onChange={event => {
-                                let rows = event.target.value;
+                                const rows = event.target.value;
                                 this.setHeight(rows); }}
                                 value={this.state.rows}
                             ></input>
@@ -185,7 +203,7 @@ class Layout extends Component {
                         <div className="cols">
                             <label>Columns (max 100):</label>
                             <input onChange={event => {
-                                let cols = event.target.value;
+                                const cols = event.target.value;
                                 this.setWidth(cols); }}
                                 value={this.state.cols}></input>
                         </div>

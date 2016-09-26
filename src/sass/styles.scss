@@ -50,8 +50,11 @@ a {
 
 td {
     border: 2px solid $black;
-    height: 20px;
-    width: 20px;
+    height: 4.5vmin;
+    max-height: 35px;
+    width: 4.5vmin;
+    max-width: 35px;
+    cursor: pointer;
 }
 
 .dead {
@@ -96,4 +99,18 @@ label {
 
 .bottomElement {
     padding-bottom: 30px;
+}
+
+@media screen and (min-width: 768px) {
+    td {
+        height: 2.5vmin;
+        width: 2.5vmin;
+    }
+}
+
+@media screen and (min-width: 992px) {
+    td {
+        height: 20px;
+        width: 20px;
+    }
 }
