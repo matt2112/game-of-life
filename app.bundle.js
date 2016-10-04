@@ -16036,7 +16036,8 @@
 	  if (x === y) {
 	    // Steps 1-5, 7-10
 	    // Steps 6.b-6.e: +0 != -0
-	    return x !== 0 || 1 / x === 1 / y;
+	    // Added the nonzero y check to make Flow happy, but it is redundant
+	    return x !== 0 || y !== 0 || 1 / x === 1 / y;
 	  } else {
 	    // Step 6.a: NaN == NaN
 	    return x !== x && y !== y;
@@ -21869,6 +21870,11 @@
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+	// Define constants
+	var newCell = "new";
+	var aliveCell = "alive";
+	var deadCell = "dead";
+
 	var Layout = function (_Component) {
 	    (0, _inherits3.default)(Layout, _Component);
 
@@ -21902,7 +21908,8 @@
 	            for (var i = 0; i < this.state.rows; i++) {
 	                var row = [];
 	                for (var j = 0; j < this.state.cols; j++) {
-	                    var cell = Math.random() > 0.85 ? "new" : "dead";
+	                    var cell = Math.random() > 0.85 ? newCell : deadCell;
+	                    console.log(cell);
 	                    row.push(cell);
 	                }
 	                board.push(row);
@@ -21934,7 +21941,7 @@
 	                    // to count number of alive or new neighbours.
 	                    for (var i = startPosY; i <= endPosY; i++) {
 	                        for (var j = startPosX; j <= endPosX; j++) {
-	                            if (oldBoard[i][j] === "alive" || oldBoard[i][j] === "new") {
+	                            if (oldBoard[i][j] === aliveCell || oldBoard[i][j] === newCell) {
 	                                neighbours += 1;
 	                                empty = false;
 	                            }
@@ -21943,28 +21950,28 @@
 	                    var cell = "";
 	                    // Determine new cell type based on number of neighbours.
 	                    // If cell is already occupied, remove from neighbour count.
-	                    if (oldBoard[posY][posX] === "new") {
+	                    if (oldBoard[posY][posX] === newCell) {
 	                        neighbours -= 1;
 	                        changed = true;
 	                        if (neighbours === 2 || neighbours === 3) {
-	                            cell = "alive";
+	                            cell = aliveCell;
 	                        } else {
-	                            cell = "dead";
+	                            cell = deadCell;
 	                        }
-	                    } else if (oldBoard[posY][posX] === "alive") {
+	                    } else if (oldBoard[posY][posX] === aliveCell) {
 	                        neighbours -= 1;
 	                        if (neighbours < 2 || neighbours > 3) {
 	                            changed = true;
-	                            cell = "dead";
+	                            cell = deadCell;
 	                        } else {
-	                            cell = "alive";
+	                            cell = aliveCell;
 	                        }
 	                    } else {
 	                        if (neighbours === 3) {
 	                            changed = true;
-	                            cell = "new";
+	                            cell = newCell;
 	                        } else {
-	                            cell = "dead";
+	                            cell = deadCell;
 	                        }
 	                    }
 	                    row.push(cell);
@@ -22002,7 +22009,7 @@
 	            for (var i = 0; i < this.state.rows; i++) {
 	                var row = [];
 	                for (var j = 0; j < this.state.cols; j++) {
-	                    row.push("dead");
+	                    row.push(deadCell);
 	                }
 	                emptyBoard.push(row);
 	            }
@@ -22016,10 +22023,10 @@
 	        key: 'toggleCell',
 	        value: function toggleCell(row, col) {
 	            var board = this.state.board;
-	            if (board[row][col] === "dead") {
-	                board[row][col] = "new";
+	            if (board[row][col] === deadCell) {
+	                board[row][col] = newCell;
 	            } else {
-	                board[row][col] = "dead";
+	                board[row][col] = deadCell;
 	            }
 	            this.setState({ board: board });
 	        }
