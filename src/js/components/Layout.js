@@ -2,6 +2,11 @@ import React, { Component } from 'react';
 
 import Grid from './Grid';
 
+// Define constants
+const newCell = "new";
+const aliveCell = "alive";
+const deadCell = "dead";
+
 class Layout extends Component {
 
     constructor() {
@@ -27,7 +32,8 @@ class Layout extends Component {
         for (let i = 0; i < this.state.rows; i++) {
             const row = [];
             for (let j = 0; j < this.state.cols; j++) {
-                const cell = Math.random() > 0.85 ? "new" : "dead";
+                const cell = Math.random() > 0.85 ? newCell : deadCell;
+                console.log(cell);
                 row.push(cell);
             }
             board.push(row);
@@ -56,7 +62,7 @@ class Layout extends Component {
                 // to count number of alive or new neighbours.
                 for (let i = startPosY; i <= endPosY; i++) {
                     for (let j = startPosX; j <= endPosX; j++) {
-                        if (oldBoard[i][j] === "alive" || oldBoard[i][j] === "new") {
+                        if (oldBoard[i][j] === aliveCell || oldBoard[i][j] === newCell) {
                             neighbours += 1;
                             empty = false;
                         }
@@ -65,28 +71,28 @@ class Layout extends Component {
                 let cell = "";
                 // Determine new cell type based on number of neighbours.
                 // If cell is already occupied, remove from neighbour count.
-                if (oldBoard[posY][posX] === "new") {
+                if (oldBoard[posY][posX] === newCell) {
                     neighbours -= 1;
                     changed = true;
                     if (neighbours === 2 || neighbours === 3) {
-                        cell = "alive";
+                        cell = aliveCell;
                     } else {
-                        cell = "dead";
+                        cell = deadCell;
                     }
-                } else if (oldBoard[posY][posX] === "alive") {
+                } else if (oldBoard[posY][posX] === aliveCell) {
                     neighbours -= 1;
                     if (neighbours < 2 || neighbours > 3) {
                         changed = true;
-                        cell = "dead";
+                        cell = deadCell;
                     } else {
-                        cell = "alive";
+                        cell = aliveCell;
                     }
                 } else {
                     if (neighbours === 3) {
                         changed = true;
-                        cell = "new";
+                        cell = newCell;
                     } else {
-                        cell = "dead";
+                        cell = deadCell;
                     }
                 }
                 row.push(cell);
@@ -121,7 +127,7 @@ class Layout extends Component {
         for (let i = 0; i < this.state.rows; i++) {
             const row = [];
             for (let j = 0; j < this.state.cols; j++) {
-                row.push("dead");
+                row.push(deadCell);
             }
             emptyBoard.push(row);
         }
@@ -132,10 +138,10 @@ class Layout extends Component {
     // Creates a new cell if dead, or a dead cell if new or alive.
     toggleCell(row, col) {
         const board = this.state.board;
-        if (board[row][col] === "dead") {
-            board[row][col] = "new";
+        if (board[row][col] === deadCell) {
+            board[row][col] = newCell;
         } else {
-            board[row][col] = "dead";
+            board[row][col] = deadCell;
         }
         this.setState({ board });
     }
