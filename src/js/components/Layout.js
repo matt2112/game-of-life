@@ -33,7 +33,6 @@ class Layout extends Component {
             const row = [];
             for (let j = 0; j < this.state.cols; j++) {
                 const cell = Math.random() > 0.85 ? newCell : deadCell;
-                console.log(cell);
                 row.push(cell);
             }
             board.push(row);
